@@ -66,7 +66,7 @@ const SetRetentionConfig = ({
     }
     setAddLoading(true);
     api
-      .invoke("PUT", `/api/v1/buckets/${bucketName}/retention`, {
+      .invoke("PUT", `/reporter/minioServer/api/v1/buckets/${bucketName}/retention`, {
         mode: retentionMode,
         unit: retentionUnit,
         validity: retentionValidity,
@@ -92,7 +92,7 @@ const SetRetentionConfig = ({
   useEffect(() => {
     if (loadingForm) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}/retention`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/retention`)
         .then((res: IRetentionConfig) => {
           setLoadingForm(false);
 

@@ -27,10 +27,7 @@ export const hasPermission = (
     return false;
   }
   const state = store.getState();
-  console.log('hasPermission --- state')
-  console.log(state)
-  console.log('hasPermission --- resource')
-  console.log(resource)
+
   const sessionGrants = state.console.session.permissions || [];
   const resourceGrants =
     sessionGrants[resource] ||

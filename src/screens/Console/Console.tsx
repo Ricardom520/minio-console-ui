@@ -270,19 +270,22 @@ const Console = ({
   //       return result;
   //     }, {});
   const allowedPages: any = {
+    "/reporter/minio/dashboard": true,
     "/reporter/minio/buckets": true,
     '/reporter/minio/buckets/': true,
     '/reporter/minio/buckets/:bucketName/admin': true,
     '/reporter/minio/buckets/:bucketName/admin/': true,
     '/reporter/minio/buckets/:bucketName/browse': true,
     '/reporter/minio/buckets/:bucketName/browse/*': true,
+    '/reporter/minio/add-bucket': true,
+    '/reporter/minio/users': true,
+    '/reporter/minio/users/:userName+': true,
   };
-  const allowedPages_test: any[] = session.pages.reduce((result: any, item: any, index: any) => {
-                                    result[item] = true;
-                                    return result;
-                                  }, {});
-  console.log('allowedPages_test');
-  console.log(allowedPages_test);
+  // const allowedPages_test: any[] = session.pages.reduce((result: any, item: any, index: any) => {
+  //                                   result[item] = true;
+  //                                   return result;
+  //                                 }, {});
+
   const routes = [
     {
       component: Dashboard,
@@ -294,15 +297,19 @@ const Console = ({
     },
     {
       component: Buckets,
-      path: "/add-bucket",
-    },
-    {
-      component: Buckets,
       path: "/reporter/minio/buckets",
     },
     {
       component: Buckets,
+      path: "/reporter/minio/add-bucket",
+    },
+    {
+      component: Buckets,
       path: "/reporter/minio/buckets/*",
+    },
+    {
+      component: Buckets,
+      path: "/reporter/minio/buckets/:bucketName/browse",
     },
     {
       component: Watch,
@@ -396,9 +403,10 @@ const Console = ({
       component: Account,
       path: "/account",
       props: {
-        changePassword: (!session ? [] : session.pages).includes(
-          "/account/change-password"
-        ),
+        // changePassword: (!session ? [] : session.pages).includes(
+        //   "/account/change-password"
+        // ),
+        changePassword: true
       },
     },
     {
@@ -466,9 +474,9 @@ const Console = ({
       path: "/license",
     },
   ];
-  const allowedRoutes = routes.filter((route: any) => allowedPages[route.path]);
-  console.log('allowedRoutes')
-  console.log(allowedRoutes)
+  // const allowedRoutes = routes.filter((route: any) => allowedPages[route.path]);
+  const allowedRoutes = routes
+
   const closeSnackBar = () => {
     setOpenSnackbar(false);
     setSnackBarMessage("");
@@ -499,7 +507,7 @@ const Console = ({
       {session && session.status === "ok" ? (
         <div className={classes.root}>
           <CssBaseline />
-          {!hideMenu && <Menu pages={session.pages} />}
+          {!hideMenu && <Menu pages={session.permissions['console-ui']} />}
 
           <main className={classes.content}>
             {needsRestart && (

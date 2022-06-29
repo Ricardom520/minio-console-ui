@@ -63,7 +63,6 @@ import {
   setSnackBarMessage,
 } from "../../../../../../actions";
 import { decodeFileName, encodeFileName } from "../../../../../../common/utils";
-import { IAM_SCOPES } from "../../../../../../common/SecureComponent/permissions";
 import SetRetention from "./SetRetention";
 import BrowserBreadcrumbs from "../../../../ObjectBrowser/BrowserBreadcrumbs";
 import DeleteObject from "../ListObjects/DeleteObject";
@@ -80,7 +79,6 @@ import PageLayout from "../../../../Common/Layout/PageLayout";
 import VerticalTabs from "../../../../Common/VerticalTabs/VerticalTabs";
 import BoxIconButton from "../../../../Common/BoxIconButton/BoxIconButton";
 import { RecoverIcon } from "../../../../../../icons";
-import SecureComponent from "../../../../../../common/SecureComponent/SecureComponent";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -284,7 +282,7 @@ const ObjectDetails = ({
       api
         .invoke(
           "GET",
-          `/api/v1/buckets/${bucketName}/objects?prefix=${internalPaths}${
+          `/reporter/minioServer/api/v1/buckets/${bucketName}/objects?prefix=${internalPaths}${
             distributedSetup ? "&with_versions=true" : ""
           }`
         )
@@ -320,7 +318,7 @@ const ObjectDetails = ({
       api
         .invoke(
           "GET",
-          `/api/v1/buckets/${bucketName}/objects?prefix=${internalPaths}&with_metadata=true`
+          `/reporter/minioServer/api/v1/buckets/${bucketName}/objects?prefix=${internalPaths}&with_metadata=true`
         )
         .then((res: FileInfoResponse) => {
           const fileData = res.objects[0];
@@ -615,24 +613,18 @@ const ObjectDetails = ({
                         <DownloadIcon />
                       </BoxIconButton>
                     )}
-                    <SecureComponent
-                      scopes={[IAM_SCOPES.S3_DELETE_OBJECT]}
-                      resource={bucketName}
-                      matchAll
+                    <BoxIconButton
+                      tooltip={"Delete Object"}
+                      color="primary"
+                      aria-label="delete"
+                      onClick={() => {
+                        setDeleteOpen(true);
+                      }}
+                      disabled={actualInfo.is_delete_marker}
+                      size="large"
                     >
-                      <BoxIconButton
-                        tooltip={"Delete Object"}
-                        color="primary"
-                        aria-label="delete"
-                        onClick={() => {
-                          setDeleteOpen(true);
-                        }}
-                        disabled={actualInfo.is_delete_marker}
-                        size="large"
-                      >
-                        <DeleteIcon />
-                      </BoxIconButton>
-                    </SecureComponent>
+                      <DeleteIcon />
+                    </BoxIconButton>
                   </Fragment>
                 }
               />
@@ -651,10 +643,6 @@ const ObjectDetails = ({
                     <Grid item xs={12}>
                       <table width={"100%"}>
                         <tbody>
-                          <SecureComponent
-                            scopes={[IAM_SCOPES.S3_GET_OBJECT_LEGAL_HOLD]}
-                            resource={bucketName}
-                          >
                             <tr>
                               <td className={classes.titleCol}>Legal Hold:</td>
                               <td className={classes.capitalizeFirst}>
@@ -664,13 +652,6 @@ const ObjectDetails = ({
                                     {actualInfo.legal_hold_status
                                       ? actualInfo.legal_hold_status.toLowerCase()
                                       : "Off"}
-                                    <SecureComponent
-                                      scopes={[
-                                        IAM_SCOPES.S3_PUT_OBJECT_LEGAL_HOLD,
-                                      ]}
-                                      resource={bucketName}
-                                      matchAll
-                                    >
                                       <IconButton
                                         color="primary"
                                         aria-label="legal-hold"
@@ -682,29 +663,18 @@ const ObjectDetails = ({
                                       >
                                         <EditIcon />
                                       </IconButton>
-                                    </SecureComponent>
                                   </Fragment>
                                 ) : (
                                   "Disabled"
                                 )}
                               </td>
                             </tr>
-                          </SecureComponent>
-                          <SecureComponent
-                            scopes={[IAM_SCOPES.S3_GET_OBJECT_RETENTION]}
-                            resource={bucketName}
-                          >
                             <tr>
                               <td className={classes.titleCol}>Retention:</td>
                               <td className={classes.capitalizeFirst}>
                                 {actualInfo.retention_mode
                                   ? actualInfo.retention_mode.toLowerCase()
                                   : "None"}
-                                <SecureComponent
-                                  scopes={[IAM_SCOPES.S3_PUT_OBJECT_RETENTION]}
-                                  resource={bucketName}
-                                  matchAll
-                                >
                                   <IconButton
                                     color="primary"
                                     aria-label="retention"
@@ -716,14 +686,8 @@ const ObjectDetails = ({
                                   >
                                     <EditIcon />
                                   </IconButton>
-                                </SecureComponent>
                               </td>
                             </tr>
-                          </SecureComponent>
-                          <SecureComponent
-                            scopes={[IAM_SCOPES.S3_GET_OBJECT_TAGGING]}
-                            resource={bucketName}
-                          >
                             <tr>
                               <td className={classes.titleCol}>Tags:</td>
                               <td>
@@ -736,17 +700,7 @@ const ObjectDetails = ({
                                     );
                                     if (tag !== "") {
                                       return (
-                                        <SecureComponent
-                                          scopes={[
-                                            IAM_SCOPES.S3_DELETE_OBJECT_TAGGING,
-                                          ]}
-                                          resource={bucketName}
-                                          matchAll
-                                          errorProps={{
-                                            deleteIcon: null,
-                                            onDelete: null,
-                                          }}
-                                        >
+                                        
                                           <Chip
                                             key={`chip-${index}`}
                                             className={classes.tag}
@@ -758,16 +712,10 @@ const ObjectDetails = ({
                                               deleteTag(tagKey, tag);
                                             }}
                                           />
-                                        </SecureComponent>
                                       );
                                     }
                                     return null;
                                   })}
-                                <SecureComponent
-                                  scopes={[IAM_SCOPES.S3_PUT_OBJECT_TAGGING]}
-                                  resource={bucketName}
-                                  matchAll
-                                >
                                   <Chip
                                     className={classes.tag}
                                     icon={<AddIcon />}
@@ -780,10 +728,8 @@ const ObjectDetails = ({
                                       setTagModalOpen(true);
                                     }}
                                   />
-                                </SecureComponent>
                               </td>
                             </tr>
-                          </SecureComponent>
                         </tbody>
                       </table>
                     </Grid>

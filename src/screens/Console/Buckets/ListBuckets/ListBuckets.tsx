@@ -45,11 +45,6 @@ import RefreshIcon from "../../../../icons/RefreshIcon";
 import AButton from "../../Common/AButton/AButton";
 import MultipleBucketsIcon from "../../../../icons/MultipleBucketsIcon";
 import SelectMultipleIcon from "../../../../icons/SelectMultipleIcon";
-import SecureComponent from "../../../../common/SecureComponent/SecureComponent";
-import {
-  CONSOLE_UI_RESOURCE,
-  IAM_SCOPES,
-} from "../../../../common/SecureComponent/permissions";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -166,7 +161,7 @@ const ListBuckets = ({
       const fetchRecords = () => {
         setLoading(true);
         api
-          .invoke("GET", `/api/v1/buckets`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets`)
           .then((res: BucketList) => {
             setLoading(false);
             setRecords(res.buckets || []);
@@ -308,22 +303,17 @@ const ListBuckets = ({
               >
                 <RefreshIcon />
               </BoxIconButton>
-              <SecureComponent
-                scopes={[IAM_SCOPES.S3_CREATE_BUCKET]}
-                resource={CONSOLE_UI_RESOURCE}
+              <Button
+                variant="contained"
+                color="primary"
+                endIcon={<AddIcon />}
+                onClick={() => {
+                  history.push("/reporter/minio/add-bucket");
+                }}
+                className={classes.addBucket}
               >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  endIcon={<AddIcon />}
-                  onClick={() => {
-                    history.push("/add-bucket");
-                  }}
-                  className={classes.addBucket}
-                >
-                  Create Bucket
-                </Button>
-              </SecureComponent>
+                Create Bucket
+              </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -382,21 +372,16 @@ const ListBuckets = ({
                         MinIO uses buckets to organize objects. A bucket is
                         similar to a folder or directory in a filesystem, where
                         each bucket can hold an arbitrary number of objects.
-                        <SecureComponent
-                          scopes={[IAM_SCOPES.S3_CREATE_BUCKET]}
-                          resource={CONSOLE_UI_RESOURCE}
-                        >
                           <br />
                           <br />
                           To get started,&nbsp;
                           <AButton
                             onClick={() => {
-                              history.push("/add-bucket");
+                              history.push("/reporter/minio/add-bucket");
                             }}
                           >
                             Create a Bucket.
                           </AButton>
-                        </SecureComponent>
                       </Fragment>
                     }
                   />

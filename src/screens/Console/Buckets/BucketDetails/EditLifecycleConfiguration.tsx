@@ -96,7 +96,7 @@ const EditLifecycleConfiguration = ({
       api
         .invoke(
           "PUT",
-          `/api/v1/buckets/${selectedBucket}/lifecycle/${lifecycle.id}`,
+          `/reporter/minioServer/api/v1/buckets/${selectedBucket}/lifecycle/${lifecycle.id}`,
           {
             disable: !enabled,
             tags: tags,

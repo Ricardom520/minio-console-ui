@@ -81,7 +81,7 @@ const AddEvent = ({
     }
     setAddLoading(true);
     api
-      .invoke("POST", `/api/v1/buckets/${selectedBucket}/events`, {
+      .invoke("POST", `/reporter/minioServer/api/v1/buckets/${selectedBucket}/events`, {
         configuration: {
           arn: arn,
           events: selectedEvents,

@@ -53,7 +53,7 @@ const DeleteReplicationRule = ({
       api
         .invoke(
           "DELETE",
-          `/api/v1/buckets/${selectedBucket}/replication/${ruleToDelete}`
+          `/reporter/minioServer/api/v1/buckets/${selectedBucket}/replication/${ruleToDelete}`
         )
         .then(() => {
           setDeleteLoading(false);

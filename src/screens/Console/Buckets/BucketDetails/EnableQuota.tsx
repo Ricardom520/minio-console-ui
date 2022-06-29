@@ -116,7 +116,7 @@ const EnableQuota = ({
     };
 
     api
-      .invoke("PUT", `/api/v1/buckets/${selectedBucket}/quota`, req)
+      .invoke("PUT", `/reporter/minioServer/api/v1/buckets/${selectedBucket}/quota`, req)
       .then(() => {
         setLoading(false);
         closeModalAndRefresh();

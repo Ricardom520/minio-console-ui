@@ -95,7 +95,7 @@ const BucketReplicationPanel = ({
     if (loadingReplication) {
       if (displayReplicationRules) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/replication`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/replication`)
           .then((res: BucketReplication) => {
             const r = res.rules ? res.rules : [];
             setReplicationRules(r);
@@ -175,11 +175,6 @@ const BucketReplicationPanel = ({
       <Grid container>
         <Grid item xs={12} className={classes.actionsTray}>
           <PanelTitle>Replication</PanelTitle>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_PUT_REPLICATION_CONFIGURATION]}
-            resource={bucketName}
-            matchAll
-          >
             <Button
               variant="contained"
               color="primary"
@@ -191,14 +186,8 @@ const BucketReplicationPanel = ({
             >
               Add Replication Rule
             </Button>
-          </SecureComponent>
         </Grid>
         <Grid item xs={12}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_GET_REPLICATION_CONFIGURATION]}
-            resource={bucketName}
-            errorProps={{ disabled: true }}
-          >
             <TableWrapper
               itemActions={replicationTableActions}
               columns={[
@@ -228,7 +217,6 @@ const BucketReplicationPanel = ({
               idField="id"
               customPaperHeight={classes.twHeight}
             />
-          </SecureComponent>
         </Grid>
         <Grid item xs={12}>
           <HelpBox

@@ -190,7 +190,7 @@ const AddBucket = ({
     }
 
     api
-      .invoke("POST", "/api/v1/buckets", request)
+      .invoke("POST", "/reporter/minioServer/api/v1/buckets", request)
       .then((res) => {
         setAddLoading(false);
         const newBucketName = `${bucketName}`;

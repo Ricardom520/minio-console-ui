@@ -72,7 +72,7 @@ const AddPolicy = ({
     }
     setAddLoading(true);
     api
-      .invoke("POST", "/api/v1/policies", {
+      .invoke("POST", "/reporter/minioServer/api/v1/policies", {
         name: policyName,
         policy: policyDefinition,
       })

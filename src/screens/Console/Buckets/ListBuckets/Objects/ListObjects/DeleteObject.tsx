@@ -56,7 +56,7 @@ const DeleteObject = ({
     api
       .invoke(
         "DELETE",
-        `/api/v1/buckets/${selectedBucket}/objects?path=${selectedObject}&recursive=${recursive}`
+        `/reporter/minioServer/api/v1/buckets/${selectedBucket}/objects?path=${selectedObject}&recursive=${recursive}`
       )
       .then(() => {
         setDeleteLoading(false);

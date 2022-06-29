@@ -22,8 +22,6 @@ export const hasAccessToResource = (
   requiredPermissions: string[],
   matchAll?: boolean
 ) => {
-  console.log('userPermissionsOnBucket')
-  console.log(userPermissionsOnBucket)
   if (!userPermissionsOnBucket) {
     return false;
   }
@@ -32,8 +30,7 @@ export const hasAccessToResource = (
   const AdminAll = userPermissionsOnBucket.includes(
     IAM_SCOPES.ADMIN_ALL_ACTIONS
   );
-  console.log('requiredPermissions')
-  console.log(requiredPermissions)
+
   const permissions = requiredPermissions.filter(function (n) {
     return (
       userPermissionsOnBucket.indexOf(n) !== -1 ||
@@ -41,8 +38,7 @@ export const hasAccessToResource = (
       (n.indexOf("admin:") !== -1 && AdminAll)
     );
   });
-  console.log('permissions')
-  console.log(permissions)
+
   return matchAll
     ? permissions.length === requiredPermissions.length
     : permissions.length > 0;

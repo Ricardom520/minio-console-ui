@@ -253,14 +253,6 @@ const AccessRule = ({
       )}
       <Grid item xs={12} className={classes.actionsTray}>
         <PanelTitle>Access Rules</PanelTitle>
-        <SecureComponent
-          scopes={[
-            IAM_SCOPES.S3_GET_BUCKET_POLICY,
-            IAM_SCOPES.S3_PUT_BUCKET_POLICY,
-          ]}
-          resource={bucketName}
-          matchAll
-        >
           <Button
             variant="contained"
             color="primary"
@@ -273,14 +265,8 @@ const AccessRule = ({
           >
             Add Access Rule
           </Button>
-        </SecureComponent>
       </Grid>
       <Paper>
-        <SecureComponent
-          scopes={[IAM_SCOPES.S3_GET_BUCKET_POLICY]}
-          resource={bucketName}
-          errorProps={{ disabled: true }}
-        >
           <TableWrapper
             noBackground={true}
             itemActions={AccessRuleActions}
@@ -293,7 +279,6 @@ const AccessRule = ({
             entityName="Access Rules"
             idField="prefix"
           />
-        </SecureComponent>
       </Paper>
     </Fragment>
   );

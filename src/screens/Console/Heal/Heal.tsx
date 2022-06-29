@@ -132,7 +132,7 @@ const Heal = ({ classes, distributedSetup }: IHeal) => {
 
   const fetchBucketList = () => {
     api
-      .invoke("GET", `/api/v1/buckets`)
+      .invoke("GET", `/reporter/minioServer/api/v1/buckets`)
       .then((res: BucketList) => {
         let buckets: Bucket[] = [];
         if (res.buckets !== null) {

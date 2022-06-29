@@ -250,7 +250,7 @@ const PolicyDetails = ({
     setAddLoading(true);
     if (editPolicy) {
       api
-        .invoke("POST", "/api/v1/policies", {
+        .invoke("POST", "/reporter/minioServer/api/v1/policies", {
           name: policyName,
           policy: policyDefinition,
         })
@@ -274,7 +274,7 @@ const PolicyDetails = ({
           api
             .invoke(
               "GET",
-              `/api/v1/policies/${encodeURIComponent(policyName)}/users`
+              `/reporter/minioServer/api/v1/policies/${encodeURIComponent(policyName)}/users`
             )
             .then((result: any) => {
               setUserList(result);
@@ -296,7 +296,7 @@ const PolicyDetails = ({
           api
             .invoke(
               "GET",
-              `/api/v1/policies/${encodeURIComponent(policyName)}/groups`
+              `/reporter/minioServer/api/v1/policies/${encodeURIComponent(policyName)}/groups`
             )
             .then((result: any) => {
               setGroupList(result);
@@ -446,19 +446,14 @@ const PolicyDetails = ({
             subTitle={<Fragment>IAM Policy</Fragment>}
             actions={
               <Fragment>
-                <SecureComponent
-                  scopes={[IAM_SCOPES.ADMIN_DELETE_POLICY]}
-                  resource={CONSOLE_UI_RESOURCE}
+                <BoxIconButton
+                  tooltip={"Delete Policy"}
+                  color="primary"
+                  aria-label="Delete Policy"
+                  onClick={deletePolicy}
                 >
-                  <BoxIconButton
-                    tooltip={"Delete Policy"}
-                    color="primary"
-                    aria-label="Delete Policy"
-                    onClick={deletePolicy}
-                  >
-                    <TrashIcon />
-                  </BoxIconButton>
-                </SecureComponent>
+                  <TrashIcon />
+                </BoxIconButton>
 
                 <BoxIconButton
                   tooltip={"Refresh"}
@@ -675,10 +670,6 @@ const PolicyDetails = ({
                             Clear
                           </button>
                         )}
-                        <SecureComponent
-                          scopes={[IAM_SCOPES.ADMIN_CREATE_POLICY]}
-                          resource={CONSOLE_UI_RESOURCE}
-                        >
                           <Button
                             type="submit"
                             variant="contained"
@@ -687,7 +678,6 @@ const PolicyDetails = ({
                           >
                             Save
                           </Button>
-                        </SecureComponent>
                       </Grid>
                       {addLoading && (
                         <Grid item xs={12}>

@@ -83,7 +83,7 @@ const PolicySelectors = ({
     isLoading(true);
 
     api
-      .invoke("GET", `/api/v1/policies?limit=1000`)
+      .invoke("GET", `/reporter/minioServer/api/v1/policies?limit=1000`)
       .then((res: PolicyList) => {
         const policies = res.policies === null ? [] : res.policies;
         isLoading(false);

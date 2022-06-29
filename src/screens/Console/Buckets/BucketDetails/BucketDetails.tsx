@@ -52,13 +52,9 @@ import DeleteBucket from "../ListBuckets/DeleteBucket";
 import AccessRulePanel from "./AccessRulePanel";
 import RefreshIcon from "../../../../icons/RefreshIcon";
 import BoxIconButton from "../../Common/BoxIconButton/BoxIconButton";
-import { IAM_SCOPES } from "../../../../common/SecureComponent/permissions";
 import PageLayout from "../../Common/Layout/PageLayout";
 import VerticalTabs from "../../Common/VerticalTabs/VerticalTabs";
 import BackLink from "../../../../common/BackLink";
-import SecureComponent, {
-  hasPermission,
-} from "../../../../common/SecureComponent/SecureComponent";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -230,7 +226,7 @@ const BucketDetails = ({
   useEffect(() => {
     if (loadingBucket) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}`)
         .then((res: BucketInfo) => {
           setBucketDetailsLoad(false);
           setBucketInfo(res);
@@ -266,6 +262,7 @@ const BucketDetails = ({
     } else {
       path = `${topLevelRoute}${path}`;
     }
+
     return path;
   };
 
@@ -326,37 +323,26 @@ const BucketDetails = ({
             }
             title={bucketName}
             subTitle={
-              <SecureComponent
-                scopes={[IAM_SCOPES.S3_GET_BUCKET_POLICY]}
-                resource={bucketName}
-              >
+              <>
                 Access:{" "}
                 <span className={classes.capitalize}>
                   {bucketInfo?.access.toLowerCase()}
                 </span>
-              </SecureComponent>
+              </>
             }
             actions={
               <Fragment>
-                <SecureComponent
-                  scopes={[
-                    IAM_SCOPES.S3_DELETE_BUCKET,
-                    IAM_SCOPES.S3_FORCE_DELETE_BUCKET,
-                  ]}
-                  resource={bucketName}
+                <BoxIconButton
+                  tooltip={"Delete"}
+                  color="primary"
+                  aria-label="Delete"
+                  onClick={() => {
+                    setDeleteOpen(true);
+                  }}
+                  size="large"
                 >
-                  <BoxIconButton
-                    tooltip={"Delete"}
-                    color="primary"
-                    aria-label="Delete"
-                    onClick={() => {
-                      setDeleteOpen(true);
-                    }}
-                    size="large"
-                  >
-                    <DeleteIcon />
-                  </BoxIconButton>
-                </SecureComponent>
+                  <DeleteIcon />
+                </BoxIconButton>
                 <BoxIconButton
                   tooltip={"Refresh"}
                   color="primary"
@@ -439,10 +425,6 @@ const BucketDetails = ({
               label: "Events",
               value: "events",
               component: Link,
-              disabled: !hasPermission(bucketName, [
-                IAM_SCOPES.S3_GET_BUCKET_NOTIFICATIONS,
-                IAM_SCOPES.S3_PUT_BUCKET_NOTIFICATIONS,
-              ]),
               to: getRoutePath("events"),
             },
           }}
@@ -451,12 +433,6 @@ const BucketDetails = ({
               label: "Replication",
               value: "replication",
               component: Link,
-              disabled:
-                !distributedSetup ||
-                !hasPermission(bucketName, [
-                  IAM_SCOPES.S3_GET_REPLICATION_CONFIGURATION,
-                  IAM_SCOPES.S3_PUT_REPLICATION_CONFIGURATION,
-                ]),
               to: getRoutePath("replication"),
             },
           }}
@@ -465,12 +441,6 @@ const BucketDetails = ({
               label: "Lifecycle",
               value: "lifecycle",
               component: Link,
-              disabled:
-                !distributedSetup ||
-                !hasPermission(bucketName, [
-                  IAM_SCOPES.S3_GET_LIFECYCLE_CONFIGURATION,
-                  IAM_SCOPES.S3_PUT_LIFECYCLE_CONFIGURATION,
-                ]),
               to: getRoutePath("lifecycle"),
             },
           }}
@@ -479,11 +449,6 @@ const BucketDetails = ({
               label: "Access Audit",
               value: "access",
               component: Link,
-              disabled: !hasPermission(bucketName, [
-                IAM_SCOPES.ADMIN_GET_POLICY,
-                IAM_SCOPES.ADMIN_LIST_USER_POLICIES,
-                IAM_SCOPES.ADMIN_LIST_USERS,
-              ]),
               to: getRoutePath("access"),
             },
           }}
@@ -492,9 +457,6 @@ const BucketDetails = ({
               label: "Access Rules",
               value: "prefix",
               component: Link,
-              disabled: !hasPermission(bucketName, [
-                IAM_SCOPES.S3_GET_BUCKET_POLICY,
-              ]),
               to: getRoutePath("prefix"),
             },
           }}

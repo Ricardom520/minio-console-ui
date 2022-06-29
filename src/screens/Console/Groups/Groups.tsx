@@ -199,38 +199,23 @@ const Groups = ({ classes, setErrorSnackMessage }: IGroupsProps) => {
 
       <PageLayout>
         <Grid item xs={12} className={classes.actionsTray}>
-          <SecureComponent
-            resource={CONSOLE_UI_RESOURCE}
-            scopes={[IAM_SCOPES.ADMIN_LIST_GROUPS]}
-            errorProps={{ disabled: true }}
-          >
-            <SearchBox
-              placeholder={"Search Groups"}
-              onChange={setFilter}
-              classes={classes}
-            />
-          </SecureComponent>
+          <SearchBox
+            placeholder={"Search Groups"}
+            onChange={setFilter}
+            classes={classes}
+          />
 
-          <SecureComponent
-            resource={CONSOLE_UI_RESOURCE}
-            scopes={[
-              IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP,
-              IAM_SCOPES.ADMIN_LIST_USERS,
-            ]}
-            matchAll
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<AddIcon />}
+            onClick={() => {
+              setSelectedGroup(null);
+              setGroupOpen(true);
+            }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<AddIcon />}
-              onClick={() => {
-                setSelectedGroup(null);
-                setGroupOpen(true);
-              }}
-            >
-              Create Group
-            </Button>
-          </SecureComponent>
+            Create Group
+          </Button>
         </Grid>
         {loading && <LinearProgress />}
         {!loading && (
@@ -238,20 +223,14 @@ const Groups = ({ classes, setErrorSnackMessage }: IGroupsProps) => {
             {records.length > 0 && (
               <Fragment>
                 <Grid item xs={12} className={classes.tableBlock}>
-                  <SecureComponent
-                    resource={CONSOLE_UI_RESOURCE}
-                    scopes={[IAM_SCOPES.ADMIN_LIST_GROUPS]}
-                    errorProps={{ disabled: true }}
-                  >
-                    <TableWrapper
-                      itemActions={tableActions}
-                      columns={[{ label: "Name", elementKey: "" }]}
-                      isLoading={loading}
-                      records={filteredRecords}
-                      entityName="Groups"
-                      idField=""
-                    />
-                  </SecureComponent>
+                  <TableWrapper
+                    itemActions={tableActions}
+                    columns={[{ label: "Name", elementKey: "" }]}
+                    isLoading={loading}
+                    records={filteredRecords}
+                    entityName="Groups"
+                    idField=""
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <HelpBox
@@ -297,27 +276,18 @@ const Groups = ({ classes, setErrorSnackMessage }: IGroupsProps) => {
                         users with membership in that group inherit that policy.
                         Groups support more simplified management of user
                         permissions on the MinIO Tenant.
-                        <SecureComponent
-                          resource={CONSOLE_UI_RESOURCE}
-                          scopes={[
-                            IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP,
-                            IAM_SCOPES.ADMIN_LIST_USERS,
-                          ]}
-                          matchAll
+                        <br />
+                        <br />
+                        To get started,{" "}
+                        <AButton
+                          onClick={() => {
+                            setSelectedGroup(null);
+                            setGroupOpen(true);
+                          }}
                         >
-                          <br />
-                          <br />
-                          To get started,{" "}
-                          <AButton
-                            onClick={() => {
-                              setSelectedGroup(null);
-                              setGroupOpen(true);
-                            }}
-                          >
-                            Create a Group
-                          </AButton>
-                          .
-                        </SecureComponent>
+                          Create a Group
+                        </AButton>
+                        .
                       </Fragment>
                     }
                   />

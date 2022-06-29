@@ -50,7 +50,7 @@ const DeleteBucket = ({
       setDeleteLoading(true);
 
       api
-        .invoke("DELETE", `/api/v1/buckets/${selectedBucket}`, {
+        .invoke("DELETE", `/reporter/minioServer/api/v1/buckets/${selectedBucket}`, {
           name: selectedBucket,
         })
         .then((res: BucketList) => {

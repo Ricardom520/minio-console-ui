@@ -31,11 +31,6 @@ import PageHeader from "../../Common/PageHeader/PageHeader";
 import { SettingsIcon } from "../../../../icons";
 import { BucketInfo } from "../types";
 import { setErrorSnackMessage } from "../../../../actions";
-import SecureComponent from "../../../../common/SecureComponent/SecureComponent";
-import {
-  IAM_PERMISSIONS,
-  IAM_ROLES,
-} from "../../../../common/SecureComponent/permissions";
 
 interface IBrowserHandlerProps {
   fileMode: boolean;
@@ -87,10 +82,6 @@ const BrowserHandler = ({
           </Fragment>
         }
         actions={
-          <SecureComponent
-            scopes={IAM_PERMISSIONS[IAM_ROLES.admin]}
-            resource={bucketName}
-          >
             <Tooltip title={"Configure Bucket"}>
               <IconButton
                 color="primary"
@@ -102,7 +93,6 @@ const BrowserHandler = ({
                 <SettingsIcon />
               </IconButton>
             </Tooltip>
-          </SecureComponent>
         }
       />
       <Grid>{fileMode ? <ObjectDetails /> : <ListObjects />}</Grid>

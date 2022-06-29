@@ -205,40 +205,28 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
           }}
           classes={classes}
         />
-        <SecureComponent
-          resource={CONSOLE_UI_RESOURCE}
-          scopes={[IAM_SCOPES.ADMIN_ADD_USER_TO_GROUP]}
-          errorProps={{ disabled: true }}
+        <Button
+          variant="contained"
+          color="primary"
+          endIcon={<UsersIcon />}
+          size="medium"
+          onClick={() => {
+            setUsersOpen(true);
+          }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            endIcon={<UsersIcon />}
-            size="medium"
-            onClick={() => {
-              setUsersOpen(true);
-            }}
-          >
-            {memberActionText}
-          </Button>
-        </SecureComponent>
+          {memberActionText}
+        </Button>
       </div>
 
       <div className={classes.tableBlock}>
-        <SecureComponent
-          resource={CONSOLE_UI_RESOURCE}
-          scopes={[IAM_SCOPES.ADMIN_LIST_USERS]}
-          errorProps={{ disabled: true }}
-        >
-          <TableWrapper
-            columns={[{ label: "Access Key", elementKey: "" }]}
-            selectedItems={[]}
-            isLoading={false}
-            records={filteredMembers}
-            entityName="Users"
-            idField=""
-          />
-        </SecureComponent>
+        <TableWrapper
+          columns={[{ label: "Access Key", elementKey: "" }]}
+          selectedItems={[]}
+          isLoading={false}
+          records={filteredMembers}
+          entityName="Users"
+          idField=""
+        />
       </div>
     </React.Fragment>
   );
@@ -299,47 +287,32 @@ const GroupsDetails = ({ classes }: IGroupDetailsProps) => {
                 <span className={classes.statusValue}>
                   {isGroupEnabled ? "Enabled" : "Disabled"}
                 </span>
-                <SecureComponent
-                  resource={CONSOLE_UI_RESOURCE}
-                  scopes={[
-                    IAM_SCOPES.ADMIN_ENABLE_GROUP,
-                    IAM_SCOPES.ADMIN_DISABLE_GROUP,
-                  ]}
-                  errorProps={{ disabled: true }}
-                  matchAll
-                >
-                  <FormSwitchWrapper
-                    indicatorLabels={["Enabled", "Disabled"]}
-                    checked={isGroupEnabled}
-                    value={"group_enabled"}
-                    id="group-status"
-                    name="group-status"
-                    onChange={() => {
-                      toggleGroupStatus(!isGroupEnabled);
-                    }}
-                    switchOnly
-                  />
-                </SecureComponent>
+                <FormSwitchWrapper
+                  indicatorLabels={["Enabled", "Disabled"]}
+                  checked={isGroupEnabled}
+                  value={"group_enabled"}
+                  id="group-status"
+                  name="group-status"
+                  onChange={() => {
+                    toggleGroupStatus(!isGroupEnabled);
+                  }}
+                  switchOnly
+                />
 
-                <SecureComponent
-                  resource={CONSOLE_UI_RESOURCE}
-                  scopes={[IAM_SCOPES.ADMIN_REMOVE_USER_FROM_GROUP]}
-                >
-                  <Tooltip title="Delete Group">
-                    <div className={classes.spacerLeft}>
-                      <BoxIconButton
-                        color="primary"
-                        aria-label="Delete Group"
-                        onClick={() => {
-                          setDeleteOpen(true);
-                        }}
-                        size="large"
-                      >
-                        <TrashIcon />
-                      </BoxIconButton>
-                    </div>
-                  </Tooltip>
-                </SecureComponent>
+                <Tooltip title="Delete Group">
+                  <div className={classes.spacerLeft}>
+                    <BoxIconButton
+                      color="primary"
+                      aria-label="Delete Group"
+                      onClick={() => {
+                        setDeleteOpen(true);
+                      }}
+                      size="large"
+                    >
+                      <TrashIcon />
+                    </BoxIconButton>
+                  </div>
+                </Tooltip>
               </Fragment>
             }
           />

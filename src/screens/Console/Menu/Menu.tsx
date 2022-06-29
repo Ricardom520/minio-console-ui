@@ -509,11 +509,12 @@ const Menu = ({
     );
   }
 
-  const allowedItems = menuItems.filter(
-    (item: any) =>
-      (allowedPages[item.to] || item.forceDisplay || item.type !== "item") &&
-      item.fsHidden !== false
-  );
+  // const allowedItems = menuItems.filter(
+  //   (item: any) =>
+  //     (allowedPages[item.to] || item.forceDisplay || item.type !== "item") &&
+  //     item.fsHidden !== false
+  // );
+  const allowedItems = menuItems
 
   return (
     <React.Fragment>

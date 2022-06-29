@@ -118,7 +118,7 @@ const ListPolicies = ({ classes, setErrorSnackMessage }: IPoliciesProps) => {
     if (loading) {
       if (displayPolicies) {
         api
-          .invoke("GET", `/api/v1/policies`)
+          .invoke("GET", `/reporter/minioServer/api/v1/policies`)
           .then((res: PolicyList) => {
             const policies = get(res, "policies", []);
 
@@ -231,41 +231,30 @@ const ListPolicies = ({ classes, setErrorSnackMessage }: IPoliciesProps) => {
             }}
             variant="standard"
           />
-          <SecureComponent
-            scopes={[IAM_SCOPES.ADMIN_CREATE_POLICY]}
-            resource={CONSOLE_UI_RESOURCE}
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<AddIcon />}
+            onClick={() => {
+              setAddScreenOpen(true);
+              setPolicyEdit(null);
+            }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<AddIcon />}
-              onClick={() => {
-                setAddScreenOpen(true);
-                setPolicyEdit(null);
-              }}
-            >
-              Create Policy
-            </Button>
-          </SecureComponent>
+            Create Policy
+          </Button>
         </Grid>
         <Grid item xs={12}>
           <br />
         </Grid>
         <Grid item xs={12}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.ADMIN_LIST_USER_POLICIES]}
-            resource={CONSOLE_UI_RESOURCE}
-            errorProps={{ disabled: true }}
-          >
-            <TableWrapper
-              itemActions={tableActions}
-              columns={[{ label: "Name", elementKey: "name" }]}
-              isLoading={loading}
-              records={filteredRecords}
-              entityName="Policies"
-              idField="name"
-            />
-          </SecureComponent>
+          <TableWrapper
+            itemActions={tableActions}
+            columns={[{ label: "Name", elementKey: "name" }]}
+            isLoading={loading}
+            records={filteredRecords}
+            entityName="Policies"
+            idField="name"
+          />
         </Grid>
         <Grid item xs={12}>
           <HelpBox

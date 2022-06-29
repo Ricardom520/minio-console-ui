@@ -64,7 +64,7 @@ const DeleteEvent = ({
     api
       .invoke(
         "DELETE",
-        `/api/v1/buckets/${selectedBucket}/events/${bucketEvent.arn}`,
+        `/reporter/minioServer/api/v1/buckets/${selectedBucket}/events/${bucketEvent.arn}`,
         {
           events,
           prefix,

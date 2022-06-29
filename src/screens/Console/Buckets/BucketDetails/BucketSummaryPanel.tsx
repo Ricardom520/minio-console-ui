@@ -198,7 +198,7 @@ const BucketSummary = ({
     if (loadingEncryption) {
       if (displayGetBucketEncryptionConfiguration) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/encryption/info`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/encryption/info`)
           .then((res: BucketEncryptionInfo) => {
             if (res.algorithm) {
               setEncryptionEnabled(true);
@@ -227,7 +227,7 @@ const BucketSummary = ({
   useEffect(() => {
     if (loadingVersioning && distributedSetup) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}/versioning`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/versioning`)
         .then((res: BucketVersioning) => {
           setIsVersioned(res.is_versioned);
           setLoadingVersioning(false);
@@ -243,7 +243,7 @@ const BucketSummary = ({
     if (loadingQuota && distributedSetup) {
       if (displayGetBucketQuota) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/quota`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/quota`)
           .then((res: BucketQuota) => {
             setQuota(res);
             if (res.quota) {
@@ -276,7 +276,7 @@ const BucketSummary = ({
     if (loadingVersioning && distributedSetup) {
       if (displayGetBucketObjectLockConfiguration) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/object-locking`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/object-locking`)
           .then((res: BucketObjectLocking) => {
             setHasObjectLocking(res.object_locking_enabled);
             setLoadingLocking(false);
@@ -301,7 +301,7 @@ const BucketSummary = ({
   useEffect(() => {
     if (loadingSize) {
       api
-        .invoke("GET", `/api/v1/buckets`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets`)
         .then((res: BucketList) => {
           const resBuckets = get(res, "buckets", []);
 
@@ -324,7 +324,7 @@ const BucketSummary = ({
   useEffect(() => {
     if (loadingTags) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}`)
         .then((res: Bucket) => {
           if (res != null && res?.details != null) {
             setTags(res?.details?.tags);
@@ -350,7 +350,7 @@ const BucketSummary = ({
   useEffect(() => {
     if (loadingReplication && distributedSetup) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}/replication`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/replication`)
         .then((res: BucketReplication) => {
           const r = res.rules ? res.rules : [];
           setReplicationRules(r.length > 0);
@@ -366,7 +366,7 @@ const BucketSummary = ({
   useEffect(() => {
     if (loadingRetention && hasObjectLocking) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}/retention`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/retention`)
         .then((res: IRetentionConfig) => {
           setLoadingRetention(false);
           setRetentionEnabled(true);
@@ -521,159 +521,102 @@ const BucketSummary = ({
           <Grid item xs={8}>
             <table width={"100%"}>
               <tbody>
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_BUCKET_POLICY]}
-                  resource={bucketName}
-                >
-                  <tr>
-                    <td className={classes.titleCol}>Access Policy:</td>
-                    <td className={classes.capitalizeFirst}>
-                      <SecureComponent
-                        scopes={[IAM_SCOPES.S3_PUT_BUCKET_POLICY]}
-                        resource={bucketName}
-                        errorProps={{ disabled: true }}
-                      >
-                        <Button
-                          color="primary"
-                          className={classes.anchorButton}
-                          onClick={() => {
-                            setAccessPolicyScreenOpen(true);
-                          }}
-                        >
-                          {bucketLoading ? (
-                            <CircularProgress
-                              color="primary"
-                              size={16}
-                              variant="indeterminate"
-                            />
-                          ) : (
-                            accessPolicy.toLowerCase()
-                          )}
-                        </Button>
-                      </SecureComponent>
-                    </td>
-                  </tr>
-                </SecureComponent>
-                {distributedSetup && (
-                  <Fragment>
-                    <SecureComponent
-                      scopes={[IAM_SCOPES.S3_GET_REPLICATION_CONFIGURATION]}
-                      resource={bucketName}
+                <tr>
+                  <td className={classes.titleCol}>Access Policy:</td>
+                  <td className={classes.capitalizeFirst}>
+                    <Button
+                      color="primary"
+                      className={classes.anchorButton}
+                      onClick={() => {
+                        setAccessPolicyScreenOpen(true);
+                      }}
                     >
-                      <tr>
-                        <td className={classes.titleCol}>Replication:</td>
-                        <td className={classes.doubleElement}>
-                          <span>
-                            {replicationRules ? "Enabled" : "Disabled"}
-                          </span>
-                        </td>
-                      </tr>
-                    </SecureComponent>
-                    <SecureComponent
-                      scopes={[
-                        IAM_SCOPES.S3_GET_BUCKET_OBJECT_LOCK_CONFIGURATION,
-                      ]}
-                      resource={bucketName}
-                    >
-                      <tr>
-                        <td className={classes.titleCol}>Object Locking:</td>
-                        <td>{!hasObjectLocking ? "Disabled" : "Enabled"}</td>
-                      </tr>
-                    </SecureComponent>
-                  </Fragment>
-                )}
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_BUCKET_ENCRYPTION_CONFIGURATION]}
-                  resource={bucketName}
-                >
-                  <tr>
-                    <td className={classes.titleCol}>Encryption:</td>
-                    <td>
-                      {loadingEncryption ? (
+                      {bucketLoading ? (
                         <CircularProgress
                           color="primary"
                           size={16}
                           variant="indeterminate"
                         />
                       ) : (
-                        <SecureComponent
-                          scopes={[
-                            IAM_SCOPES.S3_PUT_BUCKET_ENCRYPTION_CONFIGURATION,
-                          ]}
-                          resource={bucketName}
-                          errorProps={{ disabled: true }}
-                        >
-                          <Button
-                            color="primary"
-                            className={classes.anchorButton}
-                            onClick={() => {
-                              setEnableEncryptionScreenOpen(true);
-                            }}
-                          >
-                            {encryptionEnabled ? "Enabled" : "Disabled"}
-                          </Button>
-                        </SecureComponent>
+                        accessPolicy.toLowerCase()
                       )}
-                    </td>
-                  </tr>
-                </SecureComponent>
-                <SecureComponent
-                  scopes={[IAM_SCOPES.S3_GET_BUCKET_TAGGING]}
-                  resource={bucketName}
-                >
-                  <tr>
-                    <td className={classes.titleCol}>Tags:</td>
-                    <td>
-                      {tagKeys &&
-                        tagKeys.map((tagKey: any, index: any) => {
-                          const tag = get(tags, `${tagKey}`, "");
-                          if (tag !== "") {
-                            return (
-                              <SecureComponent
-                                key={`chip-${index}`}
-                                scopes={[IAM_SCOPES.S3_PUT_BUCKET_TAGGING]}
-                                resource={bucketName}
-                                matchAll
-                                errorProps={{
-                                  deleteIcon: null,
-                                  onDelete: null,
-                                }}
-                              >
-                                <Chip
-                                  className={classes.tag}
-                                  size="small"
-                                  label={`${tagKey} : ${tag}`}
-                                  color="primary"
-                                  deleteIcon={<CloseIcon />}
-                                  onDelete={() => {
-                                    deleteTag(tagKey, tag);
-                                  }}
-                                />
-                              </SecureComponent>
-                            );
-                          }
-                          return null;
-                        })}
-                      <SecureComponent
-                        scopes={[IAM_SCOPES.S3_PUT_BUCKET_TAGGING]}
-                        resource={bucketName}
+                    </Button>
+                  </td>
+                </tr>
+                {distributedSetup && (
+                  <Fragment>
+                    <tr>
+                      <td className={classes.titleCol}>Replication:</td>
+                      <td className={classes.doubleElement}>
+                        <span>
+                          {replicationRules ? "Enabled" : "Disabled"}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className={classes.titleCol}>Object Locking:</td>
+                      <td>{!hasObjectLocking ? "Disabled" : "Enabled"}</td>
+                    </tr>
+                  </Fragment>
+                )}
+                <tr>
+                  <td className={classes.titleCol}>Encryption:</td>
+                  <td>
+                    {loadingEncryption ? (
+                      <CircularProgress
+                        color="primary"
+                        size={16}
+                        variant="indeterminate"
+                      />
+                    ) : (
+                      <Button
+                        color="primary"
+                        className={classes.anchorButton}
+                        onClick={() => {
+                          setEnableEncryptionScreenOpen(true);
+                        }}
                       >
-                        <Chip
-                          className={classes.tag}
-                          icon={<AddIcon />}
-                          clickable
-                          size="small"
-                          label="Add tag"
-                          color="primary"
-                          variant="outlined"
-                          onClick={() => {
-                            setTagModalOpen(true);
-                          }}
-                        />
-                      </SecureComponent>
-                    </td>
-                  </tr>
-                </SecureComponent>
+                        {encryptionEnabled ? "Enabled" : "Disabled"}
+                      </Button>
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td className={classes.titleCol}>Tags:</td>
+                  <td>
+                    {tagKeys &&
+                      tagKeys.map((tagKey: any, index: any) => {
+                        const tag = get(tags, `${tagKey}`, "");
+                        if (tag !== "") {
+                          return (
+                            <Chip
+                              className={classes.tag}
+                              size="small"
+                              label={`${tagKey} : ${tag}`}
+                              color="primary"
+                              deleteIcon={<CloseIcon />}
+                              onDelete={() => {
+                                deleteTag(tagKey, tag);
+                              }}
+                            />
+                          );
+                        }
+                        return null;
+                      })}
+                      <Chip
+                        className={classes.tag}
+                        icon={<AddIcon />}
+                        clickable
+                        size="small"
+                        label="Add tag"
+                        color="primary"
+                        variant="outlined"
+                        onClick={() => {
+                          setTagModalOpen(true);
+                        }}
+                      />
+                  </td>
+                </tr>
               </tbody>
             </table>
           </Grid>
@@ -697,173 +640,140 @@ const BucketSummary = ({
       <br />
       <br />
       {distributedSetup && (
-        <SecureComponent
-          scopes={[IAM_SCOPES.S3_GET_BUCKET_VERSIONING]}
-          resource={bucketName}
-        >
-          <Fragment>
-            <Paper className={classes.paperContainer} elevation={1}>
-              <Grid container>
-                <Grid item xs={quotaEnabled ? 9 : 12}>
-                  <h2>Versioning</h2>
-                  <hr className={classes.hrClass} />
-                  <table width={"100%"}>
-                    <tbody>
-                      <tr>
-                        <td className={classes.titleCol}>Versioning:</td>
-                        <td>
-                          {loadingVersioning ? (
-                            <CircularProgress
-                              color="primary"
-                              size={16}
-                              variant="indeterminate"
-                            />
-                          ) : (
-                            <SecureComponent
-                              scopes={[IAM_SCOPES.S3_PUT_BUCKET_VERSIONING]}
-                              resource={bucketName}
-                              errorProps={{ disabled: true }}
-                            >
-                              <Button
-                                color="primary"
-                                className={classes.anchorButton}
-                                onClick={setBucketVersioning}
-                              >
-                                {isVersioned ? "Enabled" : "Disabled"}
-                              </Button>
-                            </SecureComponent>
-                          )}
-                        </td>
-                        <SecureComponent
-                          scopes={[IAM_SCOPES.ADMIN_GET_BUCKET_QUOTA]}
-                          resource={bucketName}
-                        >
-                          <td className={classes.titleCol}>Quota:</td>
-                          <td>
-                            {loadingQuota ? (
-                              <CircularProgress
-                                color="primary"
-                                size={16}
-                                variant="indeterminate"
-                              />
-                            ) : (
-                              <SecureComponent
-                                scopes={[IAM_SCOPES.ADMIN_SET_BUCKET_QUOTA]}
-                                resource={bucketName}
-                                errorProps={{ disabled: true }}
-                              >
-                                <Button
-                                  color="primary"
-                                  className={classes.anchorButton}
-                                  onClick={setBucketQuota}
-                                >
-                                  {quotaEnabled ? "Enabled" : "Disabled"}
-                                </Button>
-                              </SecureComponent>
-                            )}
-                          </td>
-                        </SecureComponent>
-                      </tr>
-                    </tbody>
-                  </table>
-                </Grid>
-                {quotaEnabled && quota && (
-                  <Grid item xs={3} className={classes.reportedUsage}>
-                    <Grid container direction="row" alignItems="center">
-                      <Grid item className={classes.icon} xs={2}>
-                        <GavelIcon />
-                      </Grid>
-                      <Grid item xs={10}>
-                        <Typography className={classes.elementTitle}>
-                          {cap(quota?.type)} Quota
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Typography className={classes.consumptionValue}>
-                      {niceBytes(`${quota?.quota}`)}
-                    </Typography>
-                  </Grid>
-                )}
-              </Grid>
-            </Paper>
-            <br />
-            <br />
-          </Fragment>
-        </SecureComponent>
-      )}
-
-      {hasObjectLocking && (
-        <SecureComponent
-          scopes={[IAM_SCOPES.S3_GET_OBJECT_RETENTION]}
-          resource={bucketName}
-        >
-          <Paper className={classes.paperContainer}>
+        <Fragment>
+          <Paper className={classes.paperContainer} elevation={1}>
             <Grid container>
-              <Grid item xs={12}>
-                <h2>Retention</h2>
+              <Grid item xs={quotaEnabled ? 9 : 12}>
+                <h2>Versioning</h2>
                 <hr className={classes.hrClass} />
                 <table width={"100%"}>
                   <tbody>
-                    <tr className={classes.gridContainer}>
-                      <td className={classes.titleCol}>Status:</td>
+                    <tr>
+                      <td className={classes.titleCol}>Versioning:</td>
                       <td>
-                        {loadingRetention ? (
+                        {loadingVersioning ? (
                           <CircularProgress
                             color="primary"
                             size={16}
                             variant="indeterminate"
                           />
                         ) : (
-                          <SecureComponent
-                            scopes={[IAM_SCOPES.S3_PUT_OBJECT_RETENTION]}
-                            resource={bucketName}
-                            errorProps={{ disabled: true }}
-                          >
                             <Button
                               color="primary"
                               className={classes.anchorButton}
-                              onClick={() => {
-                                setRetentionConfigOpen(true);
-                              }}
+                              onClick={setBucketVersioning}
                             >
-                              {!retentionEnabled ? "Disabled" : "Enabled"}
+                              {isVersioned ? "Enabled" : "Disabled"}
                             </Button>
-                          </SecureComponent>
                         )}
                       </td>
-                      {retentionConfig === null ? (
-                        <td colSpan={2}>&nbsp;</td>
-                      ) : (
-                        <Fragment>
-                          <td className={classes.titleCol}>Mode:</td>
-                          <td className={classes.capitalizeFirst}>
-                            {retentionConfig && retentionConfig.mode}
-                          </td>
-                        </Fragment>
-                      )}
-                    </tr>
-                    <tr className={classes.gridContainer}>
-                      {retentionConfig === null ? (
-                        <td colSpan={2}></td>
-                      ) : (
-                        <Fragment>
-                          <td className={classes.titleCol}>Valitidy:</td>
-                          <td className={classes.capitalizeFirst}>
-                            {retentionConfig && retentionConfig.validity}{" "}
-                            {retentionConfig &&
-                              (retentionConfig.validity === 1
-                                ? retentionConfig.unit.slice(0, -1)
-                                : retentionConfig.unit)}
-                          </td>
-                        </Fragment>
-                      )}
+                        <td className={classes.titleCol}>Quota:</td>
+                        <td>
+                          {loadingQuota ? (
+                            <CircularProgress
+                              color="primary"
+                              size={16}
+                              variant="indeterminate"
+                            />
+                          ) : (
+                              <Button
+                                color="primary"
+                                className={classes.anchorButton}
+                                onClick={setBucketQuota}
+                              >
+                                {quotaEnabled ? "Enabled" : "Disabled"}
+                              </Button>
+                          )}
+                        </td>
                     </tr>
                   </tbody>
                 </table>
               </Grid>
+              {quotaEnabled && quota && (
+                <Grid item xs={3} className={classes.reportedUsage}>
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item className={classes.icon} xs={2}>
+                      <GavelIcon />
+                    </Grid>
+                    <Grid item xs={10}>
+                      <Typography className={classes.elementTitle}>
+                        {cap(quota?.type)} Quota
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Typography className={classes.consumptionValue}>
+                    {niceBytes(`${quota?.quota}`)}
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
           </Paper>
-        </SecureComponent>
+          <br />
+          <br />
+        </Fragment>
+      )}
+
+      {hasObjectLocking && (
+        <Paper className={classes.paperContainer}>
+          <Grid container>
+            <Grid item xs={12}>
+              <h2>Retention</h2>
+              <hr className={classes.hrClass} />
+              <table width={"100%"}>
+                <tbody>
+                  <tr className={classes.gridContainer}>
+                    <td className={classes.titleCol}>Status:</td>
+                    <td>
+                      {loadingRetention ? (
+                        <CircularProgress
+                          color="primary"
+                          size={16}
+                          variant="indeterminate"
+                        />
+                      ) : (
+                          <Button
+                            color="primary"
+                            className={classes.anchorButton}
+                            onClick={() => {
+                              setRetentionConfigOpen(true);
+                            }}
+                          >
+                            {!retentionEnabled ? "Disabled" : "Enabled"}
+                          </Button>
+                      )}
+                    </td>
+                    {retentionConfig === null ? (
+                      <td colSpan={2}>&nbsp;</td>
+                    ) : (
+                      <Fragment>
+                        <td className={classes.titleCol}>Mode:</td>
+                        <td className={classes.capitalizeFirst}>
+                          {retentionConfig && retentionConfig.mode}
+                        </td>
+                      </Fragment>
+                    )}
+                  </tr>
+                  <tr className={classes.gridContainer}>
+                    {retentionConfig === null ? (
+                      <td colSpan={2}></td>
+                    ) : (
+                      <Fragment>
+                        <td className={classes.titleCol}>Valitidy:</td>
+                        <td className={classes.capitalizeFirst}>
+                          {retentionConfig && retentionConfig.validity}{" "}
+                          {retentionConfig &&
+                            (retentionConfig.validity === 1
+                              ? retentionConfig.unit.slice(0, -1)
+                              : retentionConfig.unit)}
+                        </td>
+                      </Fragment>
+                    )}
+                  </tr>
+                </tbody>
+              </table>
+            </Grid>
+          </Grid>
+        </Paper>
       )}
     </Fragment>
   );

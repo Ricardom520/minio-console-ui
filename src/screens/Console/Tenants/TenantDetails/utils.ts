@@ -78,6 +78,6 @@ export const getNodeSelector = (
     const def = getDefaultAffinity(tenantName, poolName);
     nodeSelector.podAntiAffinity = def.podAntiAffinity;
   }
-  console.log(nodeSelector);
+
   return nodeSelector;
 };

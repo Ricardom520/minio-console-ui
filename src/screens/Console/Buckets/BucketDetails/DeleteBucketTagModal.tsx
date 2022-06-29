@@ -75,7 +75,7 @@ const DeleteBucketTagModal = ({
     delete cleanObject[tagKey];
 
     api
-      .invoke("PUT", `/api/v1/buckets/${bucketName}/tags`, {
+      .invoke("PUT", `/reporter/minioServer/api/v1/buckets/${bucketName}/tags`, {
         tags: cleanObject,
       })
       .then((res: any) => {

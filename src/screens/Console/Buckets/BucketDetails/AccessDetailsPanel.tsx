@@ -186,42 +186,27 @@ const AccessDetails = ({
       </Tabs>
       <Paper>
         <TabPanel index={0} value={curTab}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.ADMIN_LIST_USER_POLICIES]}
-            resource={bucketName}
-          >
-            <TableWrapper
-              noBackground={true}
-              itemActions={PolicyActions}
-              columns={[{ label: "Name", elementKey: "name" }]}
-              isLoading={loadingPolicies}
-              records={bucketPolicy}
-              entityName="Policies"
-              idField="name"
-            />
-          </SecureComponent>
+          <TableWrapper
+            noBackground={true}
+            itemActions={PolicyActions}
+            columns={[{ label: "Name", elementKey: "name" }]}
+            isLoading={loadingPolicies}
+            records={bucketPolicy}
+            entityName="Policies"
+            idField="name"
+          />
         </TabPanel>
 
         <TabPanel index={1} value={curTab}>
-          <SecureComponent
-            scopes={[
-              IAM_SCOPES.ADMIN_GET_POLICY,
-              IAM_SCOPES.ADMIN_LIST_USERS,
-              IAM_SCOPES.ADMIN_LIST_GROUPS,
-            ]}
-            resource={bucketName}
-            matchAll
-          >
-            <TableWrapper
-              noBackground={true}
-              itemActions={userTableActions}
-              columns={[{ label: "User", elementKey: "accessKey" }]}
-              isLoading={loadingUsers}
-              records={bucketUsers}
-              entityName="Users"
-              idField="accessKey"
-            />
-          </SecureComponent>
+          <TableWrapper
+            noBackground={true}
+            itemActions={userTableActions}
+            columns={[{ label: "User", elementKey: "accessKey" }]}
+            isLoading={loadingUsers}
+            records={bucketUsers}
+            entityName="Users"
+            idField="accessKey"
+          />
         </TabPanel>
       </Paper>
     </Fragment>

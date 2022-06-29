@@ -122,7 +122,7 @@ const SetRetention = ({
     api
       .invoke(
         "PUT",
-        `/api/v1/buckets/${bucketName}/objects/retention?prefix=${encodeFileName(
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/retention?prefix=${encodeFileName(
           selectedObject
         )}&version_id=${versionId}`,
         {
@@ -147,7 +147,7 @@ const SetRetention = ({
     api
       .invoke(
         "DELETE",
-        `/api/v1/buckets/${bucketName}/objects/retention?prefix=${encodeFileName(
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/retention?prefix=${encodeFileName(
           selectedObject
         )}&version_id=${versionId}`
       )

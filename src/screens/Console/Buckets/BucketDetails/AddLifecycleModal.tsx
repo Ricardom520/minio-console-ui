@@ -206,7 +206,7 @@ const AddLifecycleModal = ({
     api
       .invoke(
         "POST",
-        `/api/v1/buckets/${bucketName}/lifecycle`,
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/lifecycle`,
         lifecycleInsert
       )
       .then(() => {

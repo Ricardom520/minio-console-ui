@@ -86,7 +86,7 @@ const AddTagModal = ({
     api
       .invoke(
         "PUT",
-        `/api/v1/buckets/${bucketName}/objects/tags?prefix=${selectedObject}&version_id=${verID}`,
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/tags?prefix=${selectedObject}&version_id=${verID}`,
         { tags: newTagList }
       )
       .then((res: any) => {

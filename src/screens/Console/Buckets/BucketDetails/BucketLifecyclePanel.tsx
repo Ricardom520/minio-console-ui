@@ -88,7 +88,7 @@ const BucketLifecyclePanel = ({
     if (loadingLifecycle) {
       if (displayLifeCycleRules) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/lifecycle`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/lifecycle`)
           .then((res: any) => {
             const records = get(res, "lifecycle", []);
 
@@ -204,14 +204,6 @@ const BucketLifecyclePanel = ({
       <Grid container>
         <Grid item xs={12} className={classes.actionsTray}>
           <PanelTitle>Lifecycle Rules</PanelTitle>
-          <SecureComponent
-            scopes={[
-              IAM_SCOPES.S3_PUT_LIFECYCLE_CONFIGURATION,
-              IAM_SCOPES.ADMIN_LIST_TIERS,
-            ]}
-            resource={bucketName}
-            matchAll
-          >
             <Button
               variant="contained"
               color="primary"
@@ -223,14 +215,8 @@ const BucketLifecyclePanel = ({
             >
               Add Lifecycle Rule
             </Button>
-          </SecureComponent>
         </Grid>
         <Grid item xs={12}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_GET_LIFECYCLE_CONFIGURATION]}
-            resource={bucketName}
-            errorProps={{ disabled: true }}
-          >
             <TableWrapper
               itemActions={[]}
               columns={lifecycleColumns}
@@ -241,7 +227,6 @@ const BucketLifecyclePanel = ({
               idField="id"
               customPaperHeight={classes.twHeight}
             />
-          </SecureComponent>
         </Grid>
         {!loadingLifecycle && (
           <Grid item xs={12}>

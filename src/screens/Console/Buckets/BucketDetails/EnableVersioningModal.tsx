@@ -53,7 +53,7 @@ const EnableVersioningModal = ({
     setVersioningLoading(true);
 
     api
-      .invoke("PUT", `/api/v1/buckets/${selectedBucket}/versioning`, {
+      .invoke("PUT", `/reporter/minioServer/api/v1/buckets/${selectedBucket}/versioning`, {
         versioning: !versioningCurrentState,
       })
       .then(() => {

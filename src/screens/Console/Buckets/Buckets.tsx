@@ -40,7 +40,7 @@ const Buckets = () => {
     <Router history={history}>
       <Switch>
         <Route
-          path="/add-bucket"
+          path="/reporter/minio/add-bucket"
           children={(routerProps) => (
             <Suspense fallback={<div>Loading...</div>}>
               <AddBucket />
@@ -84,7 +84,7 @@ const Buckets = () => {
           component={() => <Redirect to={`/reporter/minio/buckets`} />}
         />
         <Route
-          path="/"
+          path="/reporter/minio/"
           children={(routerProps) => (
             <Suspense fallback={<div>Loading...</div>}>
               <ListBuckets {...routerProps} />

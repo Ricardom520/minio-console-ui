@@ -87,7 +87,7 @@ const EnableBucketEncryption = ({
     }
     if (encryptionType === "disabled") {
       api
-        .invoke("POST", `/api/v1/buckets/${selectedBucket}/encryption/disable`)
+        .invoke("POST", `/reporter/minioServer/api/v1/buckets/${selectedBucket}/encryption/disable`)
         .then(() => {
           setLoading(false);
           closeModalAndRefresh();
@@ -98,7 +98,7 @@ const EnableBucketEncryption = ({
         });
     } else {
       api
-        .invoke("POST", `/api/v1/buckets/${selectedBucket}/encryption/enable`, {
+        .invoke("POST", `/reporter/minioServer/api/v1/buckets/${selectedBucket}/encryption/enable`, {
           encType: encryptionType,
           kmsKeyID: kmsKeyID,
         })

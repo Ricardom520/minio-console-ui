@@ -71,7 +71,7 @@ const RestoreFileVersion = ({
     api
       .invoke(
         "PUT",
-        `/api/v1/buckets/${bucketName}/objects/restore?prefix=${encodeFileName(
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/restore?prefix=${encodeFileName(
           objectPath
         )}&version_id=${versionID}`
       )

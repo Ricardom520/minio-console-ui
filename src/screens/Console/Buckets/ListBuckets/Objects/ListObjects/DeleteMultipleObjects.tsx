@@ -70,7 +70,7 @@ const DeleteObject = ({
     api
       .invoke(
         "POST",
-        `/api/v1/buckets/${selectedBucket}/delete-objects`,
+        `/reporter/minioServer/api/v1/buckets/${selectedBucket}/delete-objects`,
         toSend
       )
       .then(() => {

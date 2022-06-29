@@ -29,11 +29,6 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import { niceBytes, prettyNumber } from "../../../../common/utils";
 import CheckboxWrapper from "../../Common/FormComponents/CheckboxWrapper/CheckboxWrapper";
 import { Link } from "react-router-dom";
-import {
-  IAM_PERMISSIONS,
-  IAM_ROLES,
-} from "../../../../common/SecureComponent/permissions";
-import SecureComponent from "../../../../common/SecureComponent/SecureComponent";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -225,23 +220,18 @@ const BucketListItem = ({
             </Grid>
           </Grid>
           <Grid item xs={12} sm={4} textAlign={"right"}>
-            <SecureComponent
-              scopes={IAM_PERMISSIONS[IAM_ROLES.admin]}
-              resource={bucket.name}
+            <Link
+              to={`/reporter/minio/buckets/${bucket.name}/admin`}
+              style={{ textDecoration: "none" }}
             >
-              <Link
-                to={`/reporter/minio/buckets/${bucket.name}/admin`}
-                style={{ textDecoration: "none" }}
+              <Button
+                variant={"outlined"}
+                endIcon={<SettingsIcon />}
+                className={classes.manageButton}
               >
-                <Button
-                  variant={"outlined"}
-                  endIcon={<SettingsIcon />}
-                  className={classes.manageButton}
-                >
-                  Manage
-                </Button>
-              </Link>
-            </SecureComponent>
+                Manage
+              </Button>
+            </Link>
             <Link
               to={`/reporter/minio/buckets/${bucket.name}/browse`}
               style={{ textDecoration: "none" }}

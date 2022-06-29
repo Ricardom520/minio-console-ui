@@ -86,7 +86,7 @@ const DeleteTagModal = ({
     api
       .invoke(
         "PUT",
-        `/api/v1/buckets/${bucketName}/objects/tags?prefix=${encodeFileName(
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/tags?prefix=${encodeFileName(
           selectedObject
         )}&version_id=${verID}`,
         { tags: cleanObject }

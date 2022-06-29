@@ -23,7 +23,7 @@ export const download = (
 ) => {
   const anchor = document.createElement("a");
   document.body.appendChild(anchor);
-  let path = `/api/v1/buckets/${bucketName}/objects/download?prefix=${objectPath}`;
+  let path = `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/download?prefix=${objectPath}`;
   if (versionID) {
     path = path.concat(`&version_id=${versionID}`);
   }

@@ -610,7 +610,8 @@ const TableWrapper = ({
       </Fragment>
     );
   };
-
+  console.log('records')
+  console.log(records)
   return (
     <Grid item xs={12}>
       <Paper

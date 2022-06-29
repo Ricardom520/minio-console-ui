@@ -88,7 +88,7 @@ const BucketEventsPanel = ({
     if (loadingEvents) {
       if (displayEvents) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/events`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/events`)
           .then((res: BucketEventList) => {
             const events = get(res, "events", []);
             setLoadingEvents(false);
@@ -148,14 +148,6 @@ const BucketEventsPanel = ({
       <Grid container>
         <Grid item xs={12} className={classes.actionsTray}>
           <PanelTitle>Events</PanelTitle>
-          <SecureComponent
-            scopes={[
-              IAM_SCOPES.S3_PUT_BUCKET_NOTIFICATIONS,
-              IAM_SCOPES.ADMIN_SERVER_INFO,
-            ]}
-            resource={bucketName}
-            matchAll
-          >
             <Button
               variant="contained"
               color="primary"
@@ -167,14 +159,8 @@ const BucketEventsPanel = ({
             >
               Subscribe to Event
             </Button>
-          </SecureComponent>
         </Grid>
         <Grid item xs={12}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_GET_BUCKET_NOTIFICATIONS]}
-            resource={bucketName}
-            errorProps={{ disabled: true }}
-          >
             <TableWrapper
               itemActions={tableActions}
               columns={[
@@ -193,7 +179,6 @@ const BucketEventsPanel = ({
               idField="id"
               customPaperHeight={classes.twHeight}
             />
-          </SecureComponent>
         </Grid>
         {!loadingEvents && (
           <Grid item xs={12}>

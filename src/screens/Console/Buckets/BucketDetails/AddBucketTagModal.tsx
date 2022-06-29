@@ -75,7 +75,7 @@ const AddBucketTagModal = ({
     const newTagList = { ...currentTags, ...newTag };
 
     api
-      .invoke("PUT", `/api/v1/buckets/${bucketName}/tags`, {
+      .invoke("PUT", `/reporter/minioServer/api/v1/buckets/${bucketName}/tags`, {
         tags: newTagList,
       })
       .then((res: any) => {

@@ -334,9 +334,9 @@ const ListObjects = ({
 
   useEffect(() => {
     if (loadingVersioning) {
-      if (displayListObjects) {
+      // if (displayListObjects) {
         api
-          .invoke("GET", `/api/v1/buckets/${bucketName}/versioning`)
+          .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}/versioning`)
           .then((res: BucketVersioning) => {
             setIsVersioned(res.is_versioned);
             setLoadingVersioning(false);
@@ -345,9 +345,9 @@ const ListObjects = ({
             setErrorSnackMessage(err);
             setLoadingVersioning(false);
           });
-      } else {
-        setLoadingVersioning(false);
-      }
+      // } else {
+      //   setLoadingVersioning(false);
+      // }
     }
   }, [bucketName, loadingVersioning, setErrorSnackMessage, displayListObjects]);
 
@@ -372,7 +372,7 @@ const ListObjects = ({
         api
           .invoke(
             "GET",
-            `/api/v1/buckets/${bucketName}/rewind/${rewindParsed}${
+            `/reporter/minioServer/api/v1/buckets/${bucketName}/rewind/${rewindParsed}${
               pathPrefix ? `?prefix=${encodeFileName(pathPrefix)}` : ``
             }`
           )
@@ -407,7 +407,7 @@ const ListObjects = ({
 
   useEffect(() => {
     if (loading) {
-      if (displayListObjects) {
+      // if (displayListObjects) {
         let pathPrefix = "";
         if (internalPaths) {
           const decodedPath = decodeFileName(internalPaths);
@@ -422,7 +422,7 @@ const ListObjects = ({
         api
           .invoke(
             "GET",
-            `/api/v1/buckets/${bucketName}/objects${
+            `/reporter/minioServer/api/v1/buckets/${bucketName}/objects${
               pathPrefix ? `?prefix=${encodeFileName(pathPrefix)}` : ``
             }`
           )
@@ -458,7 +458,7 @@ const ListObjects = ({
                 api
                   .invoke(
                     "GET",
-                    `/api/v1/buckets/${bucketName}/rewind/${rewindParsed}${
+                    `/reporter/minioServer/api/v1/buckets/${bucketName}/rewind/${rewindParsed}${
                       pathPrefix ? `?prefix=${encodeFileName(pathPrefix)}` : ``
                     }`
                   )
@@ -484,7 +484,7 @@ const ListObjects = ({
                 api
                   .invoke(
                     "GET",
-                    `/api/v1/buckets/${bucketName}/objects${
+                    `/reporter/minioServer/api/v1/buckets/${bucketName}/objects${
                       internalPaths ? `?prefix=${internalPaths}` : ``
                     }`
                   )
@@ -522,10 +522,10 @@ const ListObjects = ({
             setLoading(false);
             setErrorSnackMessage(err);
           });
-      } else {
-        setLoadingRewind(false);
-        setLoading(false);
-      }
+      // } else {
+      //   setLoadingRewind(false);
+      //   setLoading(false);
+      // }
     }
   }, [
     loading,
@@ -544,9 +544,10 @@ const ListObjects = ({
   useEffect(() => {
     if (loadingBucket) {
       api
-        .invoke("GET", `/api/v1/buckets/${bucketName}`)
+        .invoke("GET", `/reporter/minioServer/api/v1/buckets/${bucketName}`)
         .then((res: BucketInfo) => {
           setBucketDetailsLoad(false);
+          console.log(setBucketInfo(res))
           setBucketInfo(res);
         })
         .catch((err: ErrorResponseHandler) => {
@@ -596,7 +597,7 @@ const ListObjects = ({
     }
     e.preventDefault();
     let files = e.target.files;
-    let uploadUrl = `api/v1/buckets/${bucketName}/objects/upload`;
+    let uploadUrl = `reporter/minioServer/api/v1/buckets/${bucketName}/objects/upload`;
     if (encodedPath !== "") {
       uploadUrl = `${uploadUrl}?prefix=${encodedPath}`;
     }
@@ -752,15 +753,13 @@ const ListObjects = ({
     },
   ];
 
-  if (displayDeleteObject) {
-    tableActions.push({
-      type: "delete",
-      onClick: confirmDeleteObject,
-      disableButtonFunction: () => {
-        return rewindEnabled;
-      },
-    });
-  }
+  tableActions.push({
+    type: "delete",
+    onClick: confirmDeleteObject,
+    disableButtonFunction: () => {
+      return rewindEnabled;
+    },
+  });
 
   const displayName = (element: string) => {
     let elementString = element;
@@ -989,6 +988,13 @@ const ListObjects = ({
     payload = sortASC.reverse();
   }
 
+  console.log('payload')
+  console.log(payload)
+  console.log('plSelect')
+  console.log(plSelect)
+  console.log('sortASC')
+  console.log(sortASC)
+
   return (
     <React.Fragment>
       {shareFileModalOpen && selectedPreview && (
@@ -1064,45 +1070,40 @@ const ListObjects = ({
             }
             actions={
               <Fragment>
-                <SecureComponent
-                  resource={bucketName}
-                  scopes={[IAM_SCOPES.S3_PUT_OBJECT]}
+                <BoxIconButton
+                  tooltip={"Choose or create a new path"}
+                  color="primary"
+                  aria-label="Add a new folder"
+                  onClick={() => {
+                    setCreateFolderOpen(true);
+                  }}
+                  disabled={rewindEnabled}
+                  size="large"
                 >
-                  <BoxIconButton
-                    tooltip={"Choose or create a new path"}
-                    color="primary"
-                    aria-label="Add a new folder"
-                    onClick={() => {
-                      setCreateFolderOpen(true);
-                    }}
-                    disabled={rewindEnabled}
-                    size="large"
-                  >
-                    <AddFolderIcon />
-                  </BoxIconButton>
-                  <BoxIconButton
-                    tooltip={"Upload file"}
-                    color="primary"
-                    aria-label="Refresh List"
-                    onClick={() => {
-                      if (fileUpload && fileUpload.current) {
-                        fileUpload.current.click();
-                      }
-                    }}
-                    disabled={rewindEnabled}
-                    size="large"
-                  >
-                    <UploadIcon />
-                  </BoxIconButton>
-                  <input
-                    type="file"
-                    multiple={true}
-                    onChange={(e) => uploadObject(e)}
-                    id="file-input"
-                    style={{ display: "none" }}
-                    ref={fileUpload}
-                  />
-                </SecureComponent>
+                  <AddFolderIcon />
+                </BoxIconButton>
+                <BoxIconButton
+                  tooltip={"Upload file"}
+                  color="primary"
+                  aria-label="Refresh List"
+                  onClick={() => {
+                    if (fileUpload && fileUpload.current) {
+                      fileUpload.current.click();
+                    }
+                  }}
+                  disabled={rewindEnabled}
+                  size="large"
+                >
+                  <UploadIcon />
+                </BoxIconButton>
+                <input
+                  type="file"
+                  multiple={true}
+                  onChange={(e) => uploadObject(e)}
+                  id="file-input"
+                  style={{ display: "none" }}
+                  ref={fileUpload}
+                />
                 <Badge
                   badgeContent=" "
                   color="secondary"
@@ -1141,76 +1142,60 @@ const ListObjects = ({
           />
         </Grid>
         <Grid item xs={12} className={classes.actionsTray}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_LIST_BUCKET]}
-            resource={bucketName}
+          <TextField
+            placeholder="Search Objects"
+            className={classes.searchField}
+            id="search-resource"
+            label=""
+            onChange={(val) => {
+              setFilterObjects(val.target.value);
+            }}
+            InputProps={{
+              disableUnderline: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<DeleteIcon />}
+            onClick={() => {
+              setDeleteMultipleOpen(true);
+            }}
+            disabled={selectedObjects.length === 0}
           >
-            <TextField
-              placeholder="Search Objects"
-              className={classes.searchField}
-              id="search-resource"
-              label=""
-              onChange={(val) => {
-                setFilterObjects(val.target.value);
-              }}
-              InputProps={{
-                disableUnderline: true,
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              variant="standard"
-            />
-          </SecureComponent>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_DELETE_OBJECT]}
-            resource={bucketName}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              endIcon={<DeleteIcon />}
-              onClick={() => {
-                setDeleteMultipleOpen(true);
-              }}
-              disabled={selectedObjects.length === 0}
-            >
-              Delete Selected
-            </Button>
-          </SecureComponent>
+            Delete Selected
+          </Button>
         </Grid>
         <Grid item xs={12}>
           <br />
         </Grid>
         <Grid item xs={12}>
-          <SecureComponent
-            scopes={[IAM_SCOPES.S3_LIST_BUCKET]}
-            resource={bucketName}
-            errorProps={{ disabled: true }}
-          >
-            <TableWrapper
-              itemActions={tableActions}
-              columns={rewindEnabled ? rewindModeColumns : listModeColumns}
-              isLoading={rewindEnabled ? loadingRewind : loading}
-              loadingMessage={loadingMessage}
-              entityName="Objects"
-              idField="name"
-              records={payload}
-              customPaperHeight={classes.browsePaper}
-              selectedItems={selectedObjects}
-              onSelect={selectListObjects}
-              customEmptyMessage={`This location is empty${
-                !rewindEnabled ? ", please try uploading a new file" : ""
-              }`}
-              sortConfig={{
-                currentSort: currentSortField,
-                currentDirection: sortDirection,
-                triggerSort: sortChange,
-              }}
-            />
-          </SecureComponent>
+          <TableWrapper
+            itemActions={tableActions}
+            columns={rewindEnabled ? rewindModeColumns : listModeColumns}
+            isLoading={rewindEnabled ? loadingRewind : loading}
+            loadingMessage={loadingMessage}
+            entityName="Objects"
+            idField="name"
+            records={payload}
+            customPaperHeight={classes.browsePaper}
+            selectedItems={selectedObjects}
+            onSelect={selectListObjects}
+            customEmptyMessage={`This location is empty${
+              !rewindEnabled ? ", please try uploading a new file" : ""
+            }`}
+            sortConfig={{
+              currentSort: currentSortField,
+              currentDirection: sortDirection,
+              triggerSort: sortChange,
+            }}
+          />
         </Grid>
       </PageLayout>
     </React.Fragment>

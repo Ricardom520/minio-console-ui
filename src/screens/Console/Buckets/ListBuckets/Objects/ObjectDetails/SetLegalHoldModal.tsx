@@ -79,7 +79,7 @@ const SetLegalHoldModal = ({
     api
       .invoke(
         "PUT",
-        `/api/v1/buckets/${bucketName}/objects/legalhold?prefix=${encodeFileName(
+        `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/legalhold?prefix=${encodeFileName(
           objectName
         )}&version_id=${versionId}`,
         { status: legalHoldEnabled ? "enabled" : "disabled" }

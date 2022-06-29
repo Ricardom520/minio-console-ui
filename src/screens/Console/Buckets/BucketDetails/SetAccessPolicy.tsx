@@ -59,7 +59,7 @@ const SetAccessPolicy = ({
     }
     setAddLoading(true);
     api
-      .invoke("PUT", `/api/v1/buckets/${bucketName}/set-policy`, {
+      .invoke("PUT", `/reporter/minioServer/api/v1/buckets/${bucketName}/set-policy`, {
         access: accessPolicy,
       })
       .then((res) => {

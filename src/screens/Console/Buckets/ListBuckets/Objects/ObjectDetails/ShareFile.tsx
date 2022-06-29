@@ -99,7 +99,7 @@ const ShareFile = ({
         api
           .invoke(
             "GET",
-            `/api/v1/buckets/${bucketName}/objects?prefix=${encodeFileName(
+            `/reporter/minioServer/api/v1/buckets/${bucketName}/objects?prefix=${encodeFileName(
               dataObject.name
             )}${distributedSetup ? "&with_versions=true" : ""}`
           )
@@ -149,7 +149,7 @@ const ShareFile = ({
         api
           .invoke(
             "GET",
-            `/api/v1/buckets/${bucketName}/objects/share?prefix=${encodeFileName(
+            `/reporter/minioServer/api/v1/buckets/${bucketName}/objects/share?prefix=${encodeFileName(
               dataObject.name
             )}&version_id=${versionID}${
               selectedDate !== "" ? `&expires=${diffDate}s` : ""
